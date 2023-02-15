@@ -12,8 +12,9 @@ To use the `logserver.py` script, follow these steps:
 1. Clone the repository containing the script, or copy the script to your local machine.
 2. Install any required dependencies (if any).
 3. Set the `FILE_PATHS` and `TAIL_LENGTH` environment variables to specify the file paths and tail lengths for the log files you want to serve.
+4. Optionally set the `PORT` variable to the port to use (default 8000).
 4. Run the script using the command `python logserver.py`.
-5. Access the log files and their respective SSE streams by visiting `http://localhost:8000/<filename>` and `http://localhost:8000/<filename>/stream`, respectively, in your web browser.
+5. Access the log files and their respective SSE streams by visiting `http://localhost:PORT/<filename>` and `http://localhost:PORT/<filename>/stream`, respectively, in your web browser.
 
 ## HTML Template
 

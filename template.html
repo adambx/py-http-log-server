@@ -1,36 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <title>${file_name}</title>
-    <style>
-        body {
+    <style type="text/css">
+        html, body {
             background-color: #1c1c1c;
             color: #dcdcdc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        textarea {
+            margin: 0;
+            padding: 0;
             width: 100%;
-            height: 400px;
-            font-family: 'Courier New', Courier, monospace;
+            height: 100%;
+        }
+        #content {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+        #header {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 5px;
+        }
+        #tail {
             background-color: #282828;
             color: #dcdcdc;
+            flex: 1;
             border: none;
             resize: none;
-            overflow: auto;
+            white-space: pre;
+            overflow-wrap: normal;
+            font-family: monospace;
+            font-size: 14px;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
-<body>
-    <h1>${file_name}</h1>
-    <textarea id="file-contents">${file_contents}</textarea>
-    <script>
-        let fileContents = document.getElementById("file-contents");
+<body onload="scrollToBottom()">
+    <div id="content">
+        <div id="header">
+            <h2>${file_name}</h2>
+        </div>
+        <textarea id="tail">${file_contents}</textarea>
+    </div>
+    <script type="text/javascript">
+        let tail = document.getElementById("tail");
         let source = new EventSource("${sse_url}");
         source.onmessage = function(event) {
-            fileContents.value += event.data + "\n";
-            fileContents.scrollTop = fileContents.scrollHeight;
+            tail.value += event.data + "\n";
+            scrollToBottom();
+        }
+        function scrollToBottom() {
+            var tailDiv = document.getElementById("tail");
+            tailDiv.scrollTop = tailDiv.scrollHeight;
         }
     </script>
 </body>
