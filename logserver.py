@@ -2,6 +2,7 @@ from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 
 import os
 import socket
+from string import Template
 import time
 
 class TailRequestHandler(BaseHTTPRequestHandler):
@@ -55,15 +56,17 @@ class TailRequestHandler(BaseHTTPRequestHandler):
                     self.send_header("Expires", "0")
                     self.end_headers()
 
-                    with open("template.html") as f:
-                        template = f.read()
-
+                    # Define the HTML template
+                    with open('template.html', 'r') as f:
+                        template_content = f.read()
+                        template = Template(template_content)
+                    
                     with open(file_path, "rb") as f:
                         file_contents = f.read().decode()
 
-                    url = f"/{file_name}/stream"
+                    sse_url = f"/{file_name}/stream"
 
-                    content = template.format(file_name=file_name, file_contents=file_contents, url=url)
+                    content = template.safe_substitute(file_name=file_name, file_contents=file_contents, sse_url=sse_url)
                     self.wfile.write(content.encode())
 
             else:
