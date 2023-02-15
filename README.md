@@ -1,12 +1,9 @@
+# prologue
+
+This script was developed with the collaboration of ChatGPT and is the result of a conversation that lasted 53 prompts and produced over 150 lines of dialogue. The conversation took 4-5 hours of human time to reach the final version of the script and its associated documentation.
 # logserver.py Documentation
 
-This documentation provides information on how to use the `logserver.py` Python script to serve log files and their server-sent events streams via HTTP.
-
-This script was developed with the collaboration of ChatGPT and is the result of a conversation that lasted 53 prompts and produced over 150 lines of dialogue. The conversation took approximately 1 hour, and the CPU time used by the Python interpreter was about 0.03 seconds.
-
 The `logserver.py` script is used to serve contents of logfiles and provide a landing page with a dynamically updated text field containing the contents of the logfile.
-
-The documentation was generated fully by ChatGPT.
 
 ## Usage
 
