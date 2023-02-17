@@ -1,7 +1,6 @@
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 
 import os
-import socket
 from string import Template
 import time
 
@@ -18,6 +17,24 @@ class TailRequestHandler(BaseHTTPRequestHandler):
             return file_path
         else:
             return None
+
+    def serve_index_page(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
+        self.send_header("Pragma", "no-cache")
+        self.send_header("Expires", "0")
+        self.end_headers()
+
+        # Generate a landing page with links to all available log files
+        content = "<html><body><h1>Available Log Files:</h1>"
+        for file_path in self.file_paths:
+            file_name = os.path.basename(file_path)
+            link = f'<a href="/{file_name}">{file_name}</a><br/>'
+            content += link
+        content += "</body></html>"
+
+        self.wfile.write(content.encode())
 
     def serve_file_contents(self, file_path):
         if not file_path or not os.path.isfile(file_path):
@@ -95,13 +112,17 @@ class TailRequestHandler(BaseHTTPRequestHandler):
             pass
 
     def do_GET(self):
+        if self.path == "/":
+            self.serve_index_page()
+            return
         file_path = self.get_file_path()
         self.serve_file_contents(file_path)
 
 if __name__ == "__main__":
-    server_address = ("", 8000)
+    port = int(os.getenv("PORT","8080"))
+    server_address = ("", port)
     httpd = ThreadingHTTPServer(server_address, TailRequestHandler)
     for path in TailRequestHandler.file_paths:
-        print(f"Serving tail of '{path}' on 'http://localhost:8000/{os.path.basename(path)}'")
-    print(f"Serving landing pages on 'http://localhost:8000/[filename]'")
+        print(f"Serving tail of '{path}' on 'http://localhost:{port}/{os.path.basename(path)}'")
+
     httpd.serve_forever()
